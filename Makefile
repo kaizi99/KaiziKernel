@@ -13,5 +13,8 @@ objects = start.o kernel.o terminal.o
 mykernel.bin: linker.ld $(objects)
 	ld $(LDPARAMS) -T $< -o $@ $(objects)
 
-install: mykernel.bin
-	sudo cp $< /boot/mykernel.bin
+test: clean mykernel.bin 
+	qemu-system-i386 -kernel mykernel.bin
+
+clean:
+	rm *.o mykernel.bin
