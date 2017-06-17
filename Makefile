@@ -1,20 +1,27 @@
+CC=i386-elf-gcc
+AS=i386-elf-as
+LD=i386-elf-ld
+
 GPPPARAMS = -m32 -std=gnu99 -ffreestanding -O2 -Wall -Wextra
 ASPARAMS = --32
-LDPARAMS = -melf_i386
 
 objects = start.o kernel.o terminal.o
 
+out = kaizikernel.bin
+
 %.o: %.c
-	gcc $(GPPPARAMS) -o $@ -c $<
+	$(CC) $(GPPPARAMS) -o $@ -c $<
 
 %.o: %.s
-	as $(ASPARAMS) -o $@ $<
+	$(AS) $(ASPARAMS) -o $@ $<
 
-mykernel.bin: linker.ld $(objects)
-	ld $(LDPARAMS) -T $< -o $@ $(objects)
+$(out): linker.ld $(objects)
+	$(LD) -T $< -o $@ $(objects)
 
-test: clean mykernel.bin 
-	qemu-system-i386 -kernel mykernel.bin
+.PHONY: test
+test: clean $(out)
+	qemu-system-i386 -kernel $(out)
 
+.PHONY: clean
 clean:
-	rm *.o mykernel.bin
+	rm -rf *.o mykernel.bin

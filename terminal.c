@@ -19,6 +19,8 @@ void term_clear()
       vga_buffer[index] = ((uint16_t)term_color << 8) | ' ';
     }
   }
+  term_x = 0;
+  term_y = 0;
 }
 
 void term_putc(char c)
