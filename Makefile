@@ -11,7 +11,7 @@ OBJECTS   += $(ASSOURCES:.s=.o)
 
 KERNEL = kaizikernel.bin
 
-all: $(OBJECTS )$(KERNEL)
+all: $(OBJECTS )$(KERNEL) objclean
 
 %.o: %.c
 	$(CC) $(GPPPARAMS) -o $@ -c $<
@@ -23,10 +23,13 @@ $(KERNEL): $(OBJECTS)
 	$(LD) -T linker.ld -o $@ $(OBJECTS)
 
 .PHONY: test
-test: $(KERNEL)
+test: all
 	qemu-system-i386 -kernel $(KERNEL)
 
 .PHONY: clean
-clean:
-	rm -rf $(OBJECTS) 
+clean: objclean
 	rm -rf $(KERNEL)
+
+.PHONY: objclean
+objclean:
+	rm -rf $(OBJECTS) 
