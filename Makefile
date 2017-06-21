@@ -1,6 +1,13 @@
-CC=i386-elf-gcc
-AS=i386-elf-as
-LD=i386-elf-ld
+OS := $(shell uname)
+ifeq ($(OS),Darwin)
+	CC=i386-elf-gcc
+	AS=i386-elf-as
+	LD=i386-elf-ld
+else
+	CC=gcc -m32
+	AS=as --32
+	LD=ld -melf_i386
+endif
 
 GPPPARAMS = -std=gnu99 -ffreestanding -O2 -Wall -Wextra -Iinclude
 
@@ -32,4 +39,4 @@ clean: objclean
 
 .PHONY: objclean
 objclean:
-	rm -rf $(OBJECTS) 
+	rm -rf $(OBJECTS)
